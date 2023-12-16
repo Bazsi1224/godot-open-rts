@@ -43,6 +43,11 @@ func _ready():
 	if player == null:
 		await _match.ready
 	_setup_default_properties_from_constants()
+	assert(_safety_checks())
+
+
+func is_revealing():
+	return is_in_group("revealed_units") and visible
 
 
 func _ignore(_value):
@@ -83,6 +88,10 @@ func _get_movement_speed():
 	return 0.0
 
 
+func _is_movable():
+	return _get_movement_speed() > 0.0
+
+
 func _set_color(a_color):
 	color = a_color
 	assert(player != null, "player must be set at this point")
@@ -115,6 +124,29 @@ func _teardown_current_action():
 	if action != null and action.is_inside_tree():
 		action.queue_free()
 		remove_child(action)  # triggers _on_action_node_tree_exited immediately
+
+
+func _safety_checks():
+	if movement_domain == Constants.Match.Navigation.Domain.AIR:
+		assert(
+			(
+				radius < Constants.Match.Air.Navmesh.MAX_AGENT_RADIUS
+				or is_equal_approx(radius, Constants.Match.Air.Navmesh.MAX_AGENT_RADIUS)
+			),
+			"Unit radius exceeds the established limit"
+		)
+	elif movement_domain == Constants.Match.Navigation.Domain.TERRAIN:
+		assert(
+			(
+				not _is_movable()
+				or (
+					radius < Constants.Match.Terrain.Navmesh.MAX_AGENT_RADIUS
+					or is_equal_approx(radius, Constants.Match.Terrain.Navmesh.MAX_AGENT_RADIUS)
+				)
+			),
+			"Unit radius exceeds the established limit"
+		)
+	return true
 
 
 func _handle_unit_death():

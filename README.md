@@ -19,21 +19,22 @@ This game is not going to be a very advanced RTS that would compete with other g
  - [x] deathmatch mode (human vs AI or AI vs AI)
  - [x] runtime player switching
  - [x] basic fog of war
- - [ ] units disappearing in fog of war
+ - [x] units disappearing in fog of war
  - [x] minimap
  - [x] swarm movement to position
  - [ ] swarm movement to unit
  - [x] simple UI
- - [ ] smooth & elegant UI
+ - [ ] polished UI
  - [ ] sounds
  - [ ] music
  - [ ] VFX
 
 ## Godot compatibility
 
-This project is compatible with Godot `4.1`.
+This project is compatible with Godot `4.2`.
 
-Support for Godot `4.0`, `4.0.1`, `4.0.2`, and `4.0.3` is available on `godot-4.0-support` branch.
+ - support for Godot `4.1` is available on `godot-4.1-support` branch.
+ - support for Godot `4.0` is available on `godot-4.0-support` branch.
 
 ## Screenshots
 
@@ -53,7 +54,12 @@ Everyone is free to fix bugs or perform refactoring just by opening PR. As for f
  - Pawel Lampe (Lampe Games)
  
 ### Contributors
- - Balázs Nagy (Bazsi1224)
+
+<a href="https://github.com/lampe-games/godot-open-rts/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=lampe-games/godot-open-rts" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ### Assets
  - 3D Space Kit by [Kenney](https://www.kenney.nl/assets/space-kit)

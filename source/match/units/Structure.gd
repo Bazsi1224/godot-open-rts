@@ -8,6 +8,14 @@ const UNDER_CONSTRUCTION_MATERIAL = preload(
 
 var _construction_progress = 1.0
 
+@onready var production_queue = find_child("ProductionQueue"):
+	set(_value):
+		pass
+
+
+func is_revealing():
+	return super() and is_constructed()
+
 
 func mark_as_under_construction():
 	assert(not is_under_construction(), "structure already under construction")
@@ -27,13 +35,14 @@ func construct(progress):
 	if expected_hp_after_progressing > expected_hp_before_progressing:
 		hp += 1
 	if _construction_progress >= 1.0:
-		finnish_construction()
+		_finish_construction()
 
 
-func finnish_construction():
-	_change_geometry_material(null)
-	if is_inside_tree():
-		constructed.emit()
+func cancel_construction():
+	var scene_path = get_script().resource_path.replace(".gd", ".tscn")
+	var construction_cost = Constants.Match.Units.CONSTRUCTION_COSTS[scene_path]
+	player.add_resources(construction_cost)
+	queue_free()
 
 
 func is_constructed():
@@ -42,6 +51,12 @@ func is_constructed():
 
 func is_under_construction():
 	return not is_constructed()
+
+
+func _finish_construction():
+	_change_geometry_material(null)
+	if is_inside_tree():
+		constructed.emit()
 
 
 func _change_geometry_material(material):
