@@ -1,13 +1,13 @@
-[gd_scene load_steps=24 format=3 uid="uid://dvqwcc562qxs5"]
+[gd_scene load_steps=26 format=3 uid="uid://dvqwcc562qxs5"]
 
 [ext_resource type="PackedScene" uid="uid://camns8fqod8d4" path="res://source/match/Match.tscn" id="1_cpaaw"]
 [ext_resource type="Script" path="res://tests/manual/Match.gd" id="2_mi5ae"]
-[ext_resource type="Script" path="res://source/model/PlayerSettings.gd" id="3_8b007"]
+[ext_resource type="Script" path="res://source/data-model/PlayerSettings.gd" id="3_8b007"]
 [ext_resource type="PackedScene" uid="uid://ct0ejt0trkhrf" path="res://source/match/units/CommandCenter.tscn" id="3_oqrnv"]
 [ext_resource type="PackedScene" uid="uid://cxilu6668nda6" path="res://source/match/units/AircraftFactory.tscn" id="4_a0u57"]
-[ext_resource type="Script" path="res://source/model/MatchSettings.gd" id="4_kwjav"]
-[ext_resource type="Material" uid="uid://co8vfcoqqs5i8" path="res://source/match/resources/materials/terrain.material.tres" id="5_al0mb"]
+[ext_resource type="Script" path="res://source/data-model/MatchSettings.gd" id="4_kwjav"]
 [ext_resource type="PackedScene" uid="uid://h5lqor1xl2sf" path="res://source/match/units/VehicleFactory.tscn" id="5_imqfl"]
+[ext_resource type="PackedScene" uid="uid://cbe63rdjw7y4p" path="res://source/match/maps/PlainAndSimple.tscn" id="5_rbjbk"]
 [ext_resource type="PackedScene" uid="uid://b8pckq1xn44ss" path="res://source/match/units/AntiGroundTurret.tscn" id="6_i5onm"]
 [ext_resource type="PackedScene" uid="uid://cfa8cpnpk5pcb" path="res://source/match/units/AntiAirTurret.tscn" id="7_hplpe"]
 [ext_resource type="PackedScene" uid="uid://0gow0ughqu8u" path="res://source/match/units/Drone.tscn" id="8_8jgl1"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://bf0r3fovbvf1m" path="res://source/match/units/Worker.tscn" id="11_mhynl"]
 [ext_resource type="Shader" path="res://source/shaders/3d/simple_fog_of_war.gdshader" id="12_cnst8"]
 [ext_resource type="PackedScene" uid="uid://1qlllsy6h5tc" path="res://source/match/players/simple-clairvoyant-ai/SimpleClairvoyantAI.tscn" id="15_6w32d"]
+[ext_resource type="Shader" path="res://source/shaders/2d/white_transparent.gdshader" id="16_0dnxm"]
 
 [sub_resource type="Resource" id="Resource_sm6ga"]
 script = ExtResource("3_8b007")
@@ -32,14 +33,8 @@ spawn_index = -1
 [sub_resource type="Resource" id="Resource_tnmkt"]
 script = ExtResource("4_kwjav")
 players = Array[Resource]([SubResource("Resource_sm6ga"), SubResource("Resource_7xhjj")])
-visibility = 1
+visibility = 0
 visible_player = 0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_rdr54"]
-resource_local_to_scene = true
-material = ExtResource("5_al0mb")
-size = Vector2(50, 50)
-center_offset = Vector3(25, 0, 25)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_v46ss"]
 viewport_path = NodePath("FogOfWar/CombinedViewport")
@@ -53,16 +48,23 @@ shader_parameter/texture_units_per_world_unit = 2
 shader_parameter/debug_texture_view = false
 shader_parameter/world_visibility_texture = SubResource("ViewportTexture_v46ss")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_38cip"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_26xhd"]
 viewport_path = NodePath("FogOfWar/CombinedViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ummkj"]
+resource_local_to_scene = true
+shader = ExtResource("16_0dnxm")
+shader_parameter/reference_texture = SubResource("ViewportTexture_26xhd")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_tly7c"]
+viewport_path = NodePath("HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport")
 
 [node name="Match" instance=ExtResource("1_cpaaw")]
 script = ExtResource("2_mi5ae")
 allow_resources_deficit_spending = false
 settings = SubResource("Resource_tnmkt")
 
-[node name="Terrain" parent="Map/Geometry" index="1"]
-mesh = SubResource("PlaneMesh_rdr54")
+[node name="Map" parent="." index="0" instance=ExtResource("5_rbjbk")]
 
 [node name="ScreenOverlay" parent="FogOfWar" index="1"]
 material_override = SubResource("ShaderMaterial_67o07")
@@ -94,13 +96,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.2469, 0, 5.45996)
 [node name="Worker" parent="Units/Player0" index="8" instance=ExtResource("11_mhynl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5856, 0, 14.6178)
 
-[node name="TextureRect" parent="HUD/MarginContainer/Minimap/MarginContainer" index="0"]
-texture = SubResource("ViewportTexture_38cip")
+[node name="FogOfWarMask" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport" index="3"]
+material = SubResource("ShaderMaterial_ummkj")
+
+[node name="MinimapTextureRect" parent="HUD/MarginContainer/Minimap/MarginContainer" index="1"]
+texture = SubResource("ViewportTexture_tly7c")
 
 [node name="Placeholder" type="Node" parent="Players" index="0"]
 
 [node name="SimpleClairvoyantAI" parent="Players" index="1" instance=ExtResource("15_6w32d")]
 primary_offensive_structure = 1
 secondary_offensive_structure = 0
-
-[editable path="Map"]

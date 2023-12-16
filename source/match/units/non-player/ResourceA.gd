@@ -9,6 +9,10 @@ const MATERIAL_ALBEDO_TO_REPLACE_EPSILON = 0.05
 		if resource_a == 0:
 			queue_free()
 
+var color = Constants.Match.Resources.A.COLOR:
+	set(_value):
+		pass
+
 
 func _ready():
 	_setup_mesh_colors()

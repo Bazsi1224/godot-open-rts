@@ -1,13 +1,9 @@
-[gd_scene load_steps=51 format=3 uid="uid://camns8fqod8d4"]
+[gd_scene load_steps=44 format=3 uid="uid://camns8fqod8d4"]
 
 [ext_resource type="Script" path="res://source/match/Match.gd" id="1_1555u"]
 [ext_resource type="Script" path="res://source/match/IsometricCamera3D.gd" id="1_qb2ry"]
-[ext_resource type="Script" path="res://source/model/PlayerSettings.gd" id="2_issh2"]
-[ext_resource type="Script" path="res://source/model/MatchSettings.gd" id="3_k87ed"]
 [ext_resource type="Script" path="res://source/match/FogOfWar.gd" id="5_eb52t"]
 [ext_resource type="PackedScene" uid="uid://co800e4shs7bh" path="res://source/generic-scenes-and-nodes/3d/RectangularSelection3D.tscn" id="5_yi0pu"]
-[ext_resource type="PackedScene" uid="uid://cbe63rdjw7y4p" path="res://source/match/maps/PlainAndSimple.tscn" id="6_au6gf"]
-[ext_resource type="Material" uid="uid://co8vfcoqqs5i8" path="res://source/match/resources/materials/terrain.material.tres" id="6_u47mu"]
 [ext_resource type="PackedScene" uid="uid://clbjgy724q2si" path="res://source/generic-scenes-and-nodes/2d/DynamicCircle2D.tscn" id="6_ux0ef"]
 [ext_resource type="Script" path="res://source/match/Terrain.gd" id="7_ccpu4"]
 [ext_resource type="Script" path="res://source/match/Navigation.gd" id="10_1wfp1"]
@@ -23,6 +19,7 @@
 [ext_resource type="Script" path="res://source/match/hud/Resources.gd" id="16_vjwpn"]
 [ext_resource type="Script" path="res://source/match/hud/Minimap.gd" id="17_0bfte"]
 [ext_resource type="Script" path="res://source/match/TerrainNavigation.gd" id="17_6fprk"]
+[ext_resource type="Shader" path="res://source/shaders/2d/white_transparent.gdshader" id="19_m1b2v"]
 [ext_resource type="PackedScene" uid="uid://bocb7hjilvri5" path="res://source/match/handlers/SelectionHandler.tscn" id="20_tw1wp"]
 [ext_resource type="PackedScene" uid="uid://c0uxy26e4qs4w" path="res://source/match/handlers/MouseClickAnimationsHandler.tscn" id="22_438pb"]
 [ext_resource type="PackedScene" uid="uid://1rby73ckmk7b" path="res://source/match/Menu.tscn" id="22_ofmlu"]
@@ -30,36 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://c3xjdp2yrr1fu" path="res://source/match/debug/DiagnosticHud.tscn" id="23_pocq6"]
 [ext_resource type="PackedScene" uid="uid://yn470qvc3eak" path="res://source/match/handlers/MatchEndHandler.tscn" id="26_4d7im"]
 [ext_resource type="PackedScene" uid="uid://q5w474dvts3f" path="res://source/match/handlers/StructurePlacementHandler.tscn" id="26_7heso"]
-
-[sub_resource type="Resource" id="Resource_hfc6q"]
-script = ExtResource("2_issh2")
-color = Color(0.4, 0.694118, 1, 1)
-controller = 1
-spawn_index = -1
-
-[sub_resource type="Resource" id="Resource_6k4u7"]
-script = ExtResource("2_issh2")
-color = Color(1, 0.360784, 0.45098, 1)
-controller = 2
-spawn_index = -1
-
-[sub_resource type="Resource" id="Resource_8ui6d"]
-script = ExtResource("2_issh2")
-color = Color(0.647059, 1, 0.6, 1)
-controller = 2
-spawn_index = -1
-
-[sub_resource type="Resource" id="Resource_qphv2"]
-script = ExtResource("2_issh2")
-color = Color(0.929412, 0.521569, 1, 1)
-controller = 2
-spawn_index = -1
-
-[sub_resource type="Resource" id="Resource_frabv"]
-script = ExtResource("3_k87ed")
-players = Array[Resource]([SubResource("Resource_hfc6q"), SubResource("Resource_6k4u7"), SubResource("Resource_8ui6d"), SubResource("Resource_qphv2")])
-visibility = 1
-visible_player = 0
+[ext_resource type="PackedScene" uid="uid://b8p6lcwubx1tp" path="res://source/match/handlers/UnitVisibilityHandler.tscn" id="32_fci1c"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ysb0j"]
 sun_angle_max = 200.0
@@ -79,21 +47,14 @@ fog_density = 0.0016
 fog_height = 0.25
 fog_height_density = 1.2
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_fmyt8"]
-resource_local_to_scene = true
-material = ExtResource("6_u47mu")
-size = Vector2(50, 50)
-center_offset = Vector3(25, 0, 25)
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_3sb7f"]
-data = PackedVector3Array(50, 0, 50, 0, 0, 50, 50, 0, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0)
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qw0ps"]
 render_priority = 0
 shader = ExtResource("10_weh6c")
 shader_parameter/color = Color(0.85, 0.6596, 0.578, 1)
 shader_parameter/max_density_height = -0.5
 shader_parameter/min_density_height = 0.4
+shader_parameter/max_height = 9999.0
+shader_parameter/min_height = -0.05
 
 [sub_resource type="QuadMesh" id="QuadMesh_pv7fp"]
 flip_faces = true
@@ -110,7 +71,7 @@ viewport_path = NodePath("FogOfWar/CombinedViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5rcuq"]
 resource_local_to_scene = true
-render_priority = 1
+render_priority = 2
 shader = ExtResource("13_jo8b7")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/texture_units_per_world_unit = 2
@@ -126,25 +87,36 @@ size = Vector2(50, 50)
 center_offset = Vector3(25, 0, 25)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_8emvl"]
-vertices = PackedVector3Array(6.5, 2, 0.5, 0.5, 2, 0.5, 0.5, 2, 6.5, 0.5, 2, 43.25, 0.5, 2, 49.5, 6.5, 2, 49.5, 49.5, 2, 6.5, 49.5, 2, 0.5, 43.25, 2, 0.5, 43.25, 2, 49.5, 49.5, 2, 49.5, 49.5, 2, 43.25, 0.5, 2, 37.25, 0.5, 2, 43.25, 6.5, 2, 49.5, 12.75, 2, 49.5, 49.5, 2, 6.5, 43.25, 2, 0.5, 37.25, 2, 0.5, 49.5, 2, 12.75, 12.75, 2, 0.5, 6.5, 2, 0.5, 0.5, 2, 6.5, 0.5, 2, 12.75, 37.25, 2, 49.5, 43.25, 2, 49.5, 49.5, 2, 43.25, 31, 2, 49.5, 49.5, 2, 37.25, 49.5, 2, 31, 25, 2, 49.5, 37.25, 2, 49.5, 49.5, 2, 43.25, 49.5, 2, 37.25, 31, 2, 49.5, 25, 2, 0.5, 18.75, 2, 0.5, 0.5, 2, 18.75, 0.5, 2, 25, 49.5, 2, 25, 25, 2, 0.5, 0.5, 2, 25, 18.75, 2, 49.5, 25, 2, 49.5, 49.5, 2, 31, 0.5, 2, 37.25, 12.75, 2, 49.5, 18.75, 2, 49.5, 0.5, 2, 31, 49.5, 2, 18.75, 49.5, 2, 12.75, 37.25, 2, 0.5, 31, 2, 0.5, 18.75, 2, 0.5, 12.75, 2, 0.5, 0.5, 2, 12.75, 0.5, 2, 18.75, 0.5, 2, 25, 0.5, 2, 31, 18.75, 2, 49.5, 49.5, 2, 18.75, 31, 2, 0.5, 25, 2, 0.5, 49.5, 2, 25)
-polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(5, 4, 3), PackedInt32Array(8, 7, 6), PackedInt32Array(11, 10, 9), PackedInt32Array(13, 12, 14), PackedInt32Array(14, 12, 15), PackedInt32Array(17, 16, 18), PackedInt32Array(18, 16, 19), PackedInt32Array(21, 20, 22), PackedInt32Array(22, 20, 23), PackedInt32Array(26, 25, 24), PackedInt32Array(28, 27, 29), PackedInt32Array(29, 27, 30), PackedInt32Array(32, 31, 33), PackedInt32Array(33, 31, 34), PackedInt32Array(36, 35, 37), PackedInt32Array(37, 35, 38), PackedInt32Array(44, 43, 39), PackedInt32Array(39, 43, 42), PackedInt32Array(39, 42, 41), PackedInt32Array(39, 41, 40), PackedInt32Array(46, 45, 47), PackedInt32Array(47, 45, 48), PackedInt32Array(50, 49, 51), PackedInt32Array(51, 49, 52), PackedInt32Array(54, 53, 55), PackedInt32Array(55, 53, 56), PackedInt32Array(59, 58, 57), PackedInt32Array(61, 60, 62), PackedInt32Array(62, 60, 63)]
 geometry_source_geometry_mode = 2
 geometry_source_group_name = &"air_navigation_input"
+cell_size = 0.4
+cell_height = 0.4
+agent_height = 2.0
+agent_radius = 0.8
+agent_max_climb = 0.0
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_exfwj"]
-vertices = PackedVector3Array(6.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 6.5, 0.5, 0.5, 43.25, 0.5, 0.5, 49.5, 6.5, 0.5, 49.5, 49.5, 0.5, 6.5, 49.5, 0.5, 0.5, 43.25, 0.5, 0.5, 43.25, 0.5, 49.5, 49.5, 0.5, 49.5, 49.5, 0.5, 43.25, 0.5, 0.5, 37.25, 0.5, 0.5, 43.25, 6.5, 0.5, 49.5, 12.75, 0.5, 49.5, 49.5, 0.5, 6.5, 43.25, 0.5, 0.5, 37.25, 0.5, 0.5, 49.5, 0.5, 12.75, 12.75, 0.5, 0.5, 6.5, 0.5, 0.5, 0.5, 0.5, 6.5, 0.5, 0.5, 12.75, 37.25, 0.5, 49.5, 43.25, 0.5, 49.5, 49.5, 0.5, 43.25, 31, 0.5, 49.5, 49.5, 0.5, 37.25, 49.5, 0.5, 31, 25, 0.5, 49.5, 37.25, 0.5, 49.5, 49.5, 0.5, 43.25, 49.5, 0.5, 37.25, 31, 0.5, 49.5, 25, 0.5, 0.5, 18.75, 0.5, 0.5, 0.5, 0.5, 18.75, 0.5, 0.5, 25, 49.5, 0.5, 25, 25, 0.5, 0.5, 0.5, 0.5, 25, 18.75, 0.5, 49.5, 25, 0.5, 49.5, 49.5, 0.5, 31, 0.5, 0.5, 37.25, 12.75, 0.5, 49.5, 18.75, 0.5, 49.5, 0.5, 0.5, 31, 49.5, 0.5, 18.75, 49.5, 0.5, 12.75, 37.25, 0.5, 0.5, 31, 0.5, 0.5, 18.75, 0.5, 0.5, 12.75, 0.5, 0.5, 0.5, 0.5, 12.75, 0.5, 0.5, 18.75, 0.5, 0.5, 25, 0.5, 0.5, 31, 18.75, 0.5, 49.5, 49.5, 0.5, 18.75, 31, 0.5, 0.5, 25, 0.5, 0.5, 49.5, 0.5, 25)
-polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(5, 4, 3), PackedInt32Array(8, 7, 6), PackedInt32Array(11, 10, 9), PackedInt32Array(13, 12, 14), PackedInt32Array(14, 12, 15), PackedInt32Array(17, 16, 18), PackedInt32Array(18, 16, 19), PackedInt32Array(21, 20, 22), PackedInt32Array(22, 20, 23), PackedInt32Array(26, 25, 24), PackedInt32Array(28, 27, 29), PackedInt32Array(29, 27, 30), PackedInt32Array(32, 31, 33), PackedInt32Array(33, 31, 34), PackedInt32Array(36, 35, 37), PackedInt32Array(37, 35, 38), PackedInt32Array(44, 43, 39), PackedInt32Array(39, 43, 42), PackedInt32Array(39, 42, 41), PackedInt32Array(39, 41, 40), PackedInt32Array(46, 45, 47), PackedInt32Array(47, 45, 48), PackedInt32Array(50, 49, 51), PackedInt32Array(51, 49, 52), PackedInt32Array(54, 53, 55), PackedInt32Array(55, 53, 56), PackedInt32Array(59, 58, 57), PackedInt32Array(61, 60, 62), PackedInt32Array(62, 60, 63)]
 geometry_parsed_geometry_type = 2
 geometry_collision_mask = 4278190082
 geometry_source_geometry_mode = 2
 geometry_source_group_name = &"terrain_navigation_input"
+agent_height = 2.0
+agent_radius = 1.0
+agent_max_climb = 0.0
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_rm132"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_vu2gm"]
 viewport_path = NodePath("FogOfWar/CombinedViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3nec5"]
+resource_local_to_scene = true
+shader = ExtResource("19_m1b2v")
+shader_parameter/reference_texture = SubResource("ViewportTexture_vu2gm")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_8q44e"]
+viewport_path = NodePath("HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport")
 
 [node name="Match" type="Node3D"]
 script = ExtResource("1_1555u")
-settings = SubResource("Resource_frabv")
 
 [node name="IsometricCamera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 49.5996, 12.4465, 65.9216)
@@ -170,17 +142,11 @@ environment = SubResource("Environment_qxcnu")
 
 [node name="RectangularSelection3D" parent="." instance=ExtResource("5_yi0pu")]
 
-[node name="Map" parent="." instance=ExtResource("6_au6gf")]
-
-[node name="Terrain" parent="Map/Geometry" index="1"]
-mesh = SubResource("PlaneMesh_fmyt8")
-
 [node name="Terrain" type="StaticBody3D" parent="."]
 collision_mask = 0
 script = ExtResource("7_ccpu4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain"]
-shape = SubResource("ConcavePolygonShape3D_3sb7f")
 
 [node name="Fog" type="MeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_qw0ps")
@@ -315,10 +281,61 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="TextureRect" type="TextureRect" parent="HUD/MarginContainer/Minimap/MarginContainer"]
-custom_minimum_size = Vector2(200, 200)
+[node name="MinimapViewport" type="SubViewport" parent="HUD/MarginContainer/Minimap/MarginContainer"]
+disable_3d = true
+size = Vector2i(100, 100)
+
+[node name="Background" type="ColorRect" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.351562, 0.351562, 0.351562, 1)
+
+[node name="EditorOnlyDummyUnit" type="ColorRect" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0, 0, 1)
+
+[node name="EditorOnlyDummyUnit2" type="ColorRect" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport"]
+anchors_preset = -1
+anchor_left = 0.25
+anchor_right = 0.25
+offset_left = -1.0
+offset_right = 1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+color = Color(1, 0, 0, 1)
+
+[node name="FogOfWarMask" type="ColorRect" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport"]
+material = SubResource("ShaderMaterial_3nec5")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CameraIndicator" type="Line2D" parent="HUD/MarginContainer/Minimap/MarginContainer/MinimapViewport"]
+points = PackedVector2Array(5, 5, 5, 30, 30, 30, 30, 5, 5, 5)
+width = 1.0
+begin_cap_mode = 1
+end_cap_mode = 1
+antialiased = true
+
+[node name="MinimapTextureRect" type="TextureRect" parent="HUD/MarginContainer/Minimap/MarginContainer"]
 layout_mode = 2
-texture = SubResource("ViewportTexture_rm132")
+texture = SubResource("ViewportTexture_8q44e")
 stretch_mode = 5
 
 [node name="MarginContainer2" type="MarginContainer" parent="HUD"]
@@ -404,4 +421,4 @@ rectangular_selection_3d = NodePath("../../RectangularSelection3D")
 [node name="MatchEndHandler" parent="Handlers" instance=ExtResource("26_4d7im")]
 visible = false
 
-[editable path="Map"]
+[node name="UnitVisibilityHandler" parent="Handlers" instance=ExtResource("32_fci1c")]

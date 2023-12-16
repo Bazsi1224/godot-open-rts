@@ -26,9 +26,19 @@ class Air:
 	const Y = 1.5
 	const PLANE = Plane(Vector3.UP, Y)
 
+	class Navmesh:
+		const CELL_SIZE = 0.4
+		const CELL_HEIGHT = 0.4
+		const MAX_AGENT_RADIUS = 0.8
+
 
 class Terrain:
 	const PLANE = Plane(Vector3.UP, 0)
+
+	class Navmesh:
+		const CELL_SIZE = 0.25
+		const CELL_HEIGHT = 0.25
+		const MAX_AGENT_RADIUS = 1.0  # max radius of movable units
 
 
 class Resources:
@@ -72,6 +82,7 @@ class Units:
 		"res://source/match/units/Drone.tscn": 3.0,
 		"res://source/match/units/Tank.tscn": 6.0,
 	}
+	const PRODUCTION_QUEUE_LIMIT = 5
 	const STRUCTURE_BLUEPRINTS = {
 		"res://source/match/units/CommandCenter.tscn":
 		"res://source/match/units/structure-geometries/CommandCenter.tscn",
@@ -198,3 +209,4 @@ class Units:
 	const NEW_RESOURCE_SEARCH_RADIUS_M = 30
 	const MOVING_UNIT_RADIUS_MAX_M = 1.0
 	const EMPTY_SPACE_RADIUS_SURROUNDING_STRUCTURE_M = MOVING_UNIT_RADIUS_MAX_M * 2.5
+	const STRUCTURE_CONSTRUCTING_SPEED = 0.3  # progress [0.0..1.0] per second
