@@ -1,3 +1,1 @@
-extends Node
-
-var player: Resource = null
+extends "res://source/match/players/Player.gd"

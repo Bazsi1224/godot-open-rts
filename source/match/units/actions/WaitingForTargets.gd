@@ -27,14 +27,13 @@ func is_idle():
 
 
 func _get_units_to_attack():
-	var self_position_yless = _unit.global_position * Vector3(1, 0, 1)
 	return get_tree().get_nodes_in_group("units").filter(
 		func(unit): return (
 			unit.player != _unit.player
 			and unit.movement_domain in _unit.attack_domains
 			and (
-				self_position_yless.distance_to(unit.global_position * Vector3(1, 0, 1))
-				<= _unit.attack_range
+				_unit.global_position_yless.distance_to(unit.global_position_yless)
+				<= _unit.sight_range
 			)
 		)
 	)
@@ -53,7 +52,7 @@ func _attack_unit(unit):
 func _on_timer_timeout():
 	var units_to_attack = _get_units_to_attack()
 	if not units_to_attack.is_empty():
-		_attack_unit(units_to_attack.pick_random())
+		_attack_unit(_pick_closest_unit(units_to_attack, _unit))
 
 
 func _on_attack_finished():
@@ -62,3 +61,17 @@ func _on_attack_finished():
 	_sub_action = null
 	_unit.action_updated.emit()
 	_timer.timeout.connect(_on_timer_timeout)
+
+
+static func _pick_closest_unit(units, unit):
+	assert(not units.is_empty())
+	var distance_to_closest_unit = unit.global_position_yless.distance_to(
+		units[0].global_position_yless
+	)
+	var closest_unit = units[0]
+	for unit_to_check in units:
+		var distance = unit.global_position_yless.distance_to(unit_to_check.global_position_yless)
+		if distance < distance_to_closest_unit:
+			distance_to_closest_unit = distance
+			closest_unit = unit_to_check
+	return closest_unit

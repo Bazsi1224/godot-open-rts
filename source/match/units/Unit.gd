@@ -17,22 +17,26 @@ var attack_damage = null
 var attack_interval = null
 var attack_range = null
 var attack_domains = []
-var radius = null:
-	set = _ignore,
+var radius:
 	get = _get_radius
-var movement_domain = null:
-	set = _ignore,
+var movement_domain:
 	get = _get_movement_domain
-var movement_speed = null:
-	set = _ignore,
+var movement_speed:
 	get = _get_movement_speed
 var sight_range = null
-
-var player = null
-var color = null:
-	set = _set_color
+var player:
+	get:
+		return get_parent()
+var color:
+	get:
+		return player.color
 var action = null:
 	set = _set_action
+var global_position_yless:
+	get:
+		return global_position * Vector3(1, 0, 1)
+var type:
+	get = _get_type
 
 var _action_locked = false
 
@@ -40,18 +44,15 @@ var _action_locked = false
 
 
 func _ready():
-	if player == null:
+	if not _match.is_node_ready():
 		await _match.ready
+	_setup_color()
 	_setup_default_properties_from_constants()
 	assert(_safety_checks())
 
 
 func is_revealing():
 	return is_in_group("revealed_units") and visible
-
-
-func _ignore(_value):
-	pass
 
 
 func _set_hp(value):
@@ -92,9 +93,7 @@ func _is_movable():
 	return _get_movement_speed() > 0.0
 
 
-func _set_color(a_color):
-	color = a_color
-	assert(player != null, "player must be set at this point")
+func _setup_color():
 	var material = player.get_color_material()
 	Utils.Match.traverse_node_tree_and_replace_materials_matching_albedo(
 		find_child("Geometry"),
@@ -118,6 +117,13 @@ func _set_action(action_node):
 		add_child(action_node)
 	_action_locked = false
 	action_changed.emit(action)
+
+
+func _get_type():
+	var unit_script_path = get_script().resource_path
+	var unit_file_name = unit_script_path.substr(unit_script_path.rfind("/") + 1)
+	var unit_name = unit_file_name.split(".")[0]
+	return unit_name
 
 
 func _teardown_current_action():

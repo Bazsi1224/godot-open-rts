@@ -1,14 +1,16 @@
-extends Resource
+extends Node3D
 
-var resource_a = 0:
+signal changed
+
+@export var resource_a = 0:
 	set(value):
 		resource_a = value
 		emit_changed()
-var resource_b = 0:
+@export var resource_b = 0:
 	set(value):
 		resource_b = value
 		emit_changed()
-var color = Color.WHITE
+@export var color = Color.WHITE
 
 var _color_material = null
 
@@ -39,3 +41,7 @@ func get_color_material():
 		_color_material.albedo_color = color
 		_color_material.metallic = 1
 	return _color_material
+
+
+func emit_changed():
+	changed.emit()

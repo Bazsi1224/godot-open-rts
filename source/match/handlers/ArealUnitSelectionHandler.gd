@@ -46,15 +46,6 @@ func _get_controlled_units_from_navigation_domain_within_topdown_polygon_2d(
 	return units_within_polygon
 
 
-func _select_units(units_to_select):
-	if not units_to_select.empty() && not Input.is_action_pressed("shift_selecting"):
-		MatchSignals.deselect_all_units.emit()
-	for unit in units_to_select.iterate():
-		var selection = unit.find_child("Selection")
-		if selection != null:
-			selection.select()
-
-
 func _rebase_topdown_polygon_2d_to_different_plane(topdown_polygon_2d, plane):
 	var rebased_topdown_polygon_2d = []
 	var camera = get_viewport().get_camera_3d()
@@ -112,4 +103,4 @@ func _on_selection_finished(topdown_polygon_2d):
 			)
 		)
 	)
-	_select_units(units_to_select)
+	Utils.Match.select_units(units_to_select)
